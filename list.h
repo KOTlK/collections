@@ -38,6 +38,8 @@ struct List {
     }
 
     ~List() {
+        if (allocator == &Allocator_Temp) return;
+
         allocator_free(allocator, data);
     }
 };
