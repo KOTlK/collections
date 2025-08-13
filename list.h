@@ -84,6 +84,11 @@ static inline
 void
 list_quick_sort(List<T> *list);
 
+template <typename T>
+static inline
+void
+list_flush(List<T> *list);
+
 // Implementation
 template <typename T>
 static inline
@@ -114,6 +119,9 @@ template <typename T>
 static inline
 void
 list_free(List<T> *list) {
+    // nothing to free if using Temp_Allocator
+    if (list->allocator == &Temp_Allocator) return;
+
     list->allocator->free(list->allocator, list->data);
     list->allocator->free(list->allocator, list);
 }
@@ -238,4 +246,11 @@ static inline
 void
 list_quick_sort(List<T> *list) {
     quick_sort(list->data, 0, list->count);
+}
+
+template <typename T>
+static inline
+void
+list_flush(List<T> *list) {
+    list->count = 0;
 }
