@@ -29,12 +29,23 @@ struct List {
         Assert(i < count, "Index outside the bounds of the list");
         return data[i];
     }
+
+    List(u32 length, Allocator* allocator = &Allocator_Std) : allocator(allocator),
+                                                              length(length),
+                                                              count(0) {
+        data = (T*)allocator_alloc(allocator, sizeof(T) * length);
+        Assert(data, "Cannot allocate list data.");
+    }
+
+    ~List() {
+        allocator_free(allocator, data);
+    }
 };
 
 template <typename T>
 static inline
 List<T>*
-list_make(u32 length = LIST_DEFAULT_LENGTH, Allocator* allocator = &Std_Allocator);
+list_make(u32 length = LIST_DEFAULT_LENGTH, Allocator* allocator = &Allocator_Std);
 
 template <typename T>
 static inline
@@ -111,10 +122,10 @@ template <typename T>
 static inline
 List<T>*
 list_make(u32 length, Allocator* allocator) {
-    auto list = (List<T>*)allocator->alloc(allocator, sizeof(List<T>));
-    Assert(list != null, "Cannot allocate list.");
-    auto data = (T*)allocator->alloc(allocator, sizeof(T) * length);
-    Assert(list != null, "Cannot allocate list data.");
+    auto list = (List<T>*)allocator_alloc(allocator, sizeof(List<T>));
+    Assert(list, "Cannot allocate list.");
+    auto data = (T*)allocator_alloc(allocator, sizeof(T) * length);
+    Assert(data, "Cannot allocate list data.");
 
     list->data      = data;
     list->count     = 0;
@@ -128,7 +139,22 @@ template <typename T>
 static inline
 void
 list_realloc(List<T> *list, u32 length) {
-    list->data   = (T*)list->allocator->realloc(list->allocator, list->data, sizeof(T) * length);
+    Assert(length > list->length, "Cannot resize list with less size.");
+
+    if (list->allocator == &Allocator_Temp) {
+        T* new_data = (T*)allocator_alloc(list->allocator, sizeof(T) * length);
+        Assert(new_data, "Cannot allocate enough memory for new list");
+
+        for (u64 i = 0; i < list->count; i++) {
+            new_data[i] = list->data[i];
+        }
+
+        list->data = new_data;
+    } else {
+        list->data = (T*)allocator_realloc(list->allocator, list->data, sizeof(T) * length);
+    }
+
+    Assert(list->data, "Cannot resize the list.");
     list->length = length;
 }
 
@@ -136,11 +162,11 @@ template <typename T>
 static inline
 void
 list_free(List<T> *list) {
-    // nothing to free if using Temp_Allocator
-    if (list->allocator == &Temp_Allocator) return;
+    // nothing to free if using Allocator_Temp
+    if (list->allocator == &Allocator_Temp) return;
 
-    list->allocator->free(list->allocator, list->data);
-    list->allocator->free(list->allocator, list);
+    allocator_free(list->allocator, list->data);
+    allocator_free(list->allocator, list);
 }
 
 template <typename T>

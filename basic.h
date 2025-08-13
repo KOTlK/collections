@@ -17,14 +17,14 @@
 #include "std_allocator.h"
 #include "arena.h"
 
-static Allocator Std_Allocator = {
+static Allocator Allocator_Std = {
     .alloc   = std_alloc,
     .realloc = std_realloc,
     .free    = std_free,
     .context = null
 };
 
-static Allocator Temp_Allocator = {
+static Allocator Allocator_Temp = {
     .alloc   = arena_alloc,
     .realloc = arena_realloc,
     .free    = arena_free,
@@ -32,7 +32,19 @@ static Allocator Temp_Allocator = {
 };
 
 static inline
+Allocator*
+get_std_allocator() {
+    return &Allocator_Std;
+}
+
+static inline
+Allocator*
+get_temp_allocator() {
+    return &Allocator_Temp;
+}
+
+static inline
 void
 free_temp_allocator() {
-    Temp_Allocator.free(&Temp_Allocator, null);
+    Allocator_Temp.free(&Allocator_Temp, null);
 }
