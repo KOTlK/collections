@@ -128,7 +128,7 @@ template <typename T>
 static inline
 void
 list_realloc(List<T> *list, u32 length) {
-    list->data   = (T*)list->allocator->realloc(list->allocator, list->data, length);
+    list->data   = (T*)list->allocator->realloc(list->allocator, list->data, sizeof(T) * length);
     list->length = length;
 }
 
@@ -147,8 +147,8 @@ template <typename T>
 static inline
 void
 list_append(List<T> *list, T element) {
-    if (list->length == list->count) {
-        list_realloc(list, list->length + LIST_REALLOC_STEP);
+    if (list->count >= list->length) {
+        list_realloc(list, list->length + 1 + LIST_REALLOC_STEP);
     }
 
     list->data[list->count++] = element;

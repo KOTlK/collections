@@ -30,3 +30,9 @@ static Allocator Temp_Allocator = {
     .free    = arena_free,
     .context = arena_make()
 };
+
+static inline
+void
+free_temp_allocator() {
+    Temp_Allocator.free(&Temp_Allocator, null);
+}
