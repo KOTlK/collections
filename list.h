@@ -287,3 +287,18 @@ list_find(List<T> *list, T elem, u32* index) {
     }
     return false;
 }
+
+// Predicate should match signature:
+// bool (*name)(T*)
+template <typename T, typename Predicate>
+static inline
+bool
+list_find_by_descr(List<T> *list, Predicate descr, T* elem) {
+    for (u32 i = 0; i < list->count; i++) {
+        if (descr(&list->data[i])) {
+            *elem = list->data[i];
+            return true;
+        }
+    }
+    return false;
+}
