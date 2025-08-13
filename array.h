@@ -26,8 +26,8 @@ struct Array {
         return data[i];
     }
 
-    Array(u64 length, Allocator* allocator = &Allocator_Std) : allocator(allocator),
-                                                               length(length) {
+    Array(u64 length, Allocator* allocator = &Allocator_Std) : length(length),
+                                                               allocator(allocator) {
         data = (T*)allocator_alloc(allocator, sizeof(T) * length);
         Assert(data, "Cannot allocate data for the array.");
     }

@@ -30,9 +30,9 @@ struct List {
         return data[i];
     }
 
-    List(u32 length, Allocator* allocator = &Allocator_Std) : allocator(allocator),
+    List(u32 length, Allocator* allocator = &Allocator_Std) : count(0),
                                                               length(length),
-                                                              count(0) {
+                                                              allocator(allocator) {
         data = (T*)allocator_alloc(allocator, sizeof(T) * length);
         Assert(data, "Cannot allocate list data.");
     }
