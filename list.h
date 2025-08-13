@@ -42,7 +42,7 @@ list_free(List<T> *list);
 template <typename T>
 static inline
 void
-list_add(List<T> *list, T element);
+list_append(List<T> *list, T element);
 
 template <typename T>
 static inline
@@ -121,7 +121,7 @@ list_free(List<T> *list) {
 template <typename T>
 static inline
 void
-list_add(List<T> *list, T element) {
+list_append(List<T> *list, T element) {
     if (list->length == list->count) {
         list_realloc(list, list->length + LIST_REALLOC_STEP);
     }
