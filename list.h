@@ -89,6 +89,16 @@ static inline
 void
 list_flush(List<T> *list);
 
+template <typename T>
+static inline
+bool
+list_contains(List<T> *list, T elem);
+
+template <typename T>
+static inline
+bool
+list_find(List<T> *list, T elem, u32* index);
+
 // Implementation
 template <typename T>
 static inline
@@ -261,6 +271,19 @@ bool
 list_contains(List<T> *list, T elem) {
     for (u32 i = 0; i < list->count; i++) {
         if (list->data[i] == elem) return true;
+    }
+    return false;
+}
+
+template <typename T>
+static inline
+bool
+list_find(List<T> *list, T elem, u32* index) {
+    for (u32 i = 0; i < list->count; i++) {
+        if (list->data[i] == elem) {
+            *index = i;
+            return true;
+        }
     }
     return false;
 }
