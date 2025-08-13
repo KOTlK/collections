@@ -20,8 +20,15 @@ struct List {
     const T* begin() const { return data; }
     const T* end()   const { return &data[count]; }
 
-    T& operator[](u32 i)             { return data[i]; }
-    const T& operator[](u32 i) const { return data[i]; }
+    T& operator[](u32 i) {
+        Assert(i < count, "Index outside the bounds of the list");
+        return data[i];
+    }
+
+    const T& operator[](u32 i) const {
+        Assert(i < count, "Index outside the bounds of the list");
+        return data[i];
+    }
 };
 
 template <typename T>
