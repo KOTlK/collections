@@ -254,3 +254,13 @@ void
 list_flush(List<T> *list) {
     list->count = 0;
 }
+
+template <typename T>
+static inline
+bool
+list_contains(List<T> *list, T elem) {
+    for (u32 i = 0; i < list->count; i++) {
+        if (list->data[i] == elem) return true;
+    }
+    return false;
+}
