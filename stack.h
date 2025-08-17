@@ -58,6 +58,11 @@ static inline
 T
 stack_pop(Stack<T>* stack);
 
+template <typename T>
+static inline
+void
+stack_clear(Stack<T>* stack);
+
 // Implementation
 template <typename T>
 static inline
@@ -131,4 +136,11 @@ T
 stack_pop(Stack<T>* stack) {
     Assert(stack->count > 0, "You are trying to pop element, but stack is empty");
     return stack->data[--stack->count];
+}
+
+template <typename T>
+static inline
+void
+stack_clear(Stack<T>* stack) {
+    stack->count = 0;
 }

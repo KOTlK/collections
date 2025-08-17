@@ -119,6 +119,11 @@ static inline
 bool
 list_find(List<T> *list, T elem, u32* index);
 
+template <typename T>
+static inline
+void
+list_clear(List<T> *list);
+
 // Implementation
 template <typename T>
 static inline
@@ -147,7 +152,7 @@ list_realloc(List<T> *list, u32 length) {
         T* new_data = (T*)allocator_alloc(list->allocator, sizeof(T) * length);
         Assert(new_data, "Cannot allocate enough memory for new list");
 
-        for (u64 i = 0; i < list->count; i++) {
+        for (u32 i = 0; i < list->count; i++) {
             new_data[i] = list->data[i];
         }
 
@@ -336,4 +341,11 @@ list_find_by_descr(List<T> *list, Predicate descr, T* elem) {
         }
     }
     return false;
+}
+
+template <typename T>
+static inline
+void
+list_clear(List<T> *list) {
+    list->count = 0;
 }

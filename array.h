@@ -71,6 +71,11 @@ array_set(Array<T>* array, u64 index, T elem);
 
 template <typename T>
 static inline
+void
+array_clear(Array<T>* array);
+
+template <typename T>
+static inline
 Array<T>*
 array_make(u64 length, Allocator* allocator) {
     auto array = (Array<T>*)allocator_alloc(allocator, sizeof(Array<T>));
@@ -139,4 +144,13 @@ void
 array_set(Array<T>* array, u64 index, T elem) {
     Assert(index < array->length - 1, "Index outside bounds of the array.");
     array->data[index] = elem;
+}
+
+template <typename T>
+static inline
+void
+array_clear(Array<T>* array) {
+    for (u64 i = 0; i < array->length; i++) {
+        array->data[i] = {0};
+    }
 }
